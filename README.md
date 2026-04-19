@@ -30,6 +30,36 @@ M.A.G.E. utilizes a multi-model pipeline to process, enhance, and evaluate your 
 
 ---
 
+## Image Examples
+
+### Auto Masking Example -
+### Replace Horse with Pig
+
+Uploading Horse Image:
+
+<img src="./example_images/horse.jpg"/>
+
+Mask of Horse Extracted:
+
+<img src="./example_images/horse_mask.png"/>
+
+M.A.G.E. Modified Image Output:
+
+<img src="./example_images/pig.png"/>
+
+### Auto Masking Examples -
+### Car Style Changes
+
+Change Car to be Cartoon:
+
+<img src="./example_images/car_cartoon.png"/>
+
+Change Car to be a Pencil Sketch:
+
+<img src="./example_images/car_pencil.png"/>
+
+---
+
 ## Key Features
 
 * **Auto-Masking (YOLO):** Type what you want to edit (e.g., "car"), and YOLO automatically isolates it.
