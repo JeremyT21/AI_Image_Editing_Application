@@ -52,6 +52,66 @@ STYLE_WORDS = {
     "surreal", "vector", "flat design",
 }
 
+STYLE_PRESETS = {
+    "Auto (detect from prompt)": None,
+    "Photorealistic": {
+        "suffix": "highly detailed, photorealistic, sharp focus, natural lighting, high quality",
+        "negative_add": "cartoon, anime, illustration, drawing, painting, 3d render",
+        "guidance": 7.5, "steps_min": 30, "dilate": 10,
+    },
+    "Cartoon": {
+        "suffix": "cartoon illustration, bold outlines, flat vibrant colors, cel-shaded, animated style",
+        "negative_add": "photorealistic, photograph, realistic, 3d render, grainy",
+        "guidance": 11.0, "steps_min": 45, "dilate": 22,
+    },
+    "Anime": {
+        "suffix": "anime style, cel-shaded, clean lineart, expressive eyes, vibrant colors",
+        "negative_add": "photorealistic, photograph, realistic, western cartoon, 3d render",
+        "guidance": 11.0, "steps_min": 45, "dilate": 22,
+    },
+    "Oil Painting": {
+        "suffix": "oil painting, visible brushstrokes, rich textured pigment, classical art, painterly",
+        "negative_add": "photorealistic, photograph, digital art, 3d render, sharp edges",
+        "guidance": 10.0, "steps_min": 45, "dilate": 20,
+    },
+    "Watercolor": {
+        "suffix": "watercolor painting, soft edges, flowing pigment, paper texture, delicate washes",
+        "negative_add": "photorealistic, sharp edges, 3d render, harsh lines",
+        "guidance": 10.0, "steps_min": 40, "dilate": 20,
+    },
+    "Pencil Sketch": {
+        "suffix": "pencil sketch, graphite drawing, cross-hatching, sketchy lineart, paper background",
+        "negative_add": "color, photorealistic, 3d render, painting",
+        "guidance": 10.0, "steps_min": 40, "dilate": 20,
+    },
+    "3D Render": {
+        "suffix": "3d rendered, pixar style, smooth surfaces, subsurface scattering, soft studio lighting",
+        "negative_add": "2d, flat, photograph, sketch, painting",
+        "guidance": 10.0, "steps_min": 45, "dilate": 18,
+    },
+}
+
+STYLE_CHOICES = list(STYLE_PRESETS.keys())
+DEFAULT_STYLE = STYLE_CHOICES[0]
+
+
+def apply_style(prompt, negative, style_name, user_steps, user_guidance):
+    preset = STYLE_PRESETS.get(style_name)
+
+    if preset is None:
+        # Auto mode: fall back to keyword detection
+        if is_stylized(prompt):
+            return user_steps, user_guidance, negative, 22, ", clean lines, vibrant colors, high quality"
+        return user_steps, user_guidance, negative, 10, ", highly detailed, photorealistic, high quality"
+
+    merged_neg = negative.strip()
+    if preset["negative_add"] not in merged_neg:
+        merged_neg = f"{merged_neg}, {preset['negative_add']}" if merged_neg else preset["negative_add"]
+
+    eff_steps = max(user_steps, preset["steps_min"])
+    eff_guidance = max(user_guidance, preset["guidance"])
+    return eff_steps, eff_guidance, merged_neg, preset["dilate"], f", {preset['suffix']}"
+
 
 # Image Preprocessing to standardize input image
 def preprocessImage(image, size):
@@ -173,7 +233,7 @@ def mainProcess(image, maskImage, prompt, negativePrompt,
 
 
 # Uses T5 to add more detail to prompt
-def enhancePrompt(user_prompt, target_object=None):
+def enhancePrompt(user_prompt, target_object=None, style=DEFAULT_STYLE):
     if not user_prompt or user_prompt.strip() == "":
         return user_prompt
     cleaned = user_prompt.strip()
@@ -185,9 +245,7 @@ def enhancePrompt(user_prompt, target_object=None):
                     cleaned = cleaned.lower().split(sep, 1)[1]
                     break
             break
-    stylized = is_stylized(cleaned)
-    suffix = ", clean lines, vibrant colors, high quality" if stylized \
-        else ", highly detailed, photorealistic, high quality"
+    _, _, _, _, suffix = apply_style(user_prompt, "", style, 0, 0)
     instruction = (
         f"Expand this phrase into a detailed, descriptive image caption. "
         f"Focus on visual details like colors, lighting, and style. "
@@ -239,7 +297,7 @@ def styleAware(prompt, user_steps, user_guidance, user_negative):
 
 
 # Auto-Mask Pipeline using YOLO and Stable Diffusion
-def auto_mask(image, target, prompt, negativePrompt, use_t5=True, steps=30, guidanceScale=7.5, seed=1024):
+def auto_mask(image, target, prompt, negativePrompt, style=DEFAULT_STYLE, use_t5=True, steps=30, guidanceScale=7.5, seed=1024):
     if image is None:
         return None, None, "Upload an image first."
     
@@ -259,24 +317,27 @@ def auto_mask(image, target, prompt, negativePrompt, use_t5=True, steps=30, guid
     if target_idx is None:
         found = ", ".join(sorted(set(labels)))
         return None, None, f"No '{target}' detected. YOLO found: {found}"
-    
-    if masks is not None:
-        mask = maskFromSegmentation(image, masks[target_idx])
-    else:
-        mask = maskBox(image, boxes[target_idx])
 
-    final_prompt = enhancePrompt(prompt, target_object=target) if use_t5 else prompt
+    eff_steps, eff_guidance, eff_negative, eff_dilate, _ = apply_style(prompt, negativePrompt, style, steps, guidanceScale)
+
+    if masks is not None:
+        mask = maskFromSegmentation(image, masks[target_idx], dilate=eff_dilate)
+    else:
+        mask = maskBox(image, boxes[target_idx], dilate=eff_dilate)
+
+    final_prompt = enhancePrompt(prompt, target_object=target, style=style) if use_t5 else prompt
     intent = classifyIntent(prompt) if use_t5 else "n/a"
     result, score = mainProcess(image, 
                                 mask, 
                                 final_prompt, 
-                                negativePrompt,
-                                steps=steps, 
-                                guidanceScale=guidanceScale,
+                                eff_negative,
+                                steps=eff_steps, 
+                                guidanceScale=eff_guidance,
                                 seed=seed, 
                                 score_prompt=prompt)
     ssim = preservationScore(image, result, mask)
     stats = (
+        f"Style: {style}\n"
         f"Detected: {labels[target_idx]} (conf {scores[target_idx]:.2f})\n"
         f"Intent (T5): {intent}\n"
         f"Enhanced prompt: {final_prompt[:150]}{'...' if len(final_prompt) > 150 else ''}\n"
@@ -287,7 +348,7 @@ def auto_mask(image, target, prompt, negativePrompt, use_t5=True, steps=30, guid
 
 
 # Manual Mask Pipeline
-def manual_mask(image, prompt, negativePrompt, use_t5=True, steps=30, guidanceScale=7.5, seed=1024):
+def manual_mask(image, prompt, negativePrompt, style=DEFAULT_STYLE, use_t5=True, steps=30, guidanceScale=7.5, seed=1024):
     if image is None:
         return None, "Upload an image first."
     
@@ -323,17 +384,19 @@ def manual_mask(image, prompt, negativePrompt, use_t5=True, steps=30, guidanceSc
         return None, "Mask is empty — draw over the area you want to edit."
     
     mask = Image.fromarray(binary_mask, mode="L")
-    final_prompt = enhancePrompt(prompt) if use_t5 else prompt
+    eff_steps, eff_guidance, eff_negative, _, _ = apply_style(prompt, negativePrompt, style, steps, guidanceScale)
+    final_prompt = enhancePrompt(prompt, style=style) if use_t5 else prompt
     result, score = mainProcess(background, 
                                 mask, 
                                 final_prompt, 
-                                negativePrompt,
-                                steps=steps, 
-                                guidanceScale=guidanceScale,
+                                eff_negative,
+                                steps=eff_steps, 
+                                guidanceScale=eff_guidance,
                                 seed=seed, 
                                 score_prompt=prompt)
     ssim = preservationScore(background, result, mask)
     return result, (
+        f"Style: {style}\n"
         f"Enhanced prompt: {final_prompt[:150]}{'...' if len(final_prompt) > 150 else ''}\n"
         f"CLIP Score: {score:.4f}\n"
         f"SSIM Preservation: {ssim:.4f}"
@@ -427,6 +490,7 @@ def build_ui():
                         auto_mask_img = gr.Image(label="Generated Mask", interactive=False)
                         auto_target = gr.Textbox(label="Target object (e.g. 'car', 'dog')")
                         auto_prompt = gr.Textbox(label="Prompt")
+                        auto_style = gr.Dropdown(choices=STYLE_CHOICES, value=DEFAULT_STYLE, label="Style")
                         auto_neg = gr.Textbox(
                             label="Negative Prompt",
                             value="blurry, low quality, distorted, deformed, ugly",
@@ -443,7 +507,7 @@ def build_ui():
                 auto_btn.click(
                     auto_mask,
                     inputs=[auto_input, auto_target, auto_prompt, auto_neg,
-                            auto_t5, auto_steps, auto_guide, auto_seed],
+                            auto_style, auto_t5, auto_steps, auto_guide, auto_seed],
                     outputs=[auto_output, auto_mask_img, auto_info],
                 )
 
@@ -459,6 +523,7 @@ def build_ui():
                             height=700,
                         )
                         man_prompt = gr.Textbox(label="Prompt")
+                        man_style = gr.Dropdown(choices=STYLE_CHOICES, value=DEFAULT_STYLE, label="Style")
                         man_neg = gr.Textbox(
                             label="Negative Prompt",
                             value="blurry, low quality, distorted",
@@ -475,7 +540,7 @@ def build_ui():
                 man_btn.click(
                     manual_mask,
                     inputs=[man_drawing, man_prompt, man_neg,
-                            man_t5, man_steps, man_guide, man_seed],
+                            man_style, man_t5, man_steps, man_guide, man_seed],
                     outputs=[man_output, man_info],
                 )
 

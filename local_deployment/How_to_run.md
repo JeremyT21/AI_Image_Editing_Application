@@ -1,7 +1,8 @@
 # How To Run the app.py Locally
+[!NOTE] Must be in the local_deployment folder
 
 ## Using CPU:
-Install PyTorch Manually to specify version:
+Install PyTorch manually to specify version:
 
 ```pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121```
 
