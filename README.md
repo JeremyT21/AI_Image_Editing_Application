@@ -55,5 +55,6 @@ Ensure you have the required dependencies installed (PyTorch, Diffusers, Ultraly
 2. Run the application:
 ```bash
 python app.py
+3. Open browser and navitgate to local Gradio Server: [http://127.0.0.1:7860](http://127.0.0.1:7860)
 
 
