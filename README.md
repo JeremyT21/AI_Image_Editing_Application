@@ -49,10 +49,8 @@ M.A.G.E. utilizes a multi-model pipeline to process, enhance, and evaluate your 
 | **7** | **Output** | The resulting image, generated mask, and metric stats are returned to the user. |
 
 ## Deployment
-Ensure you have the required dependencies installed (PyTorch, Diffusers, Ultralytics, Transformers, Gradio). 
-
-2. Run the application (for more details, see `How_to_run.md`, open browser and navigate to local Gradio Server: [http://127.0.0.1:7860](http://127.0.0.1:7860)
-):
+1. Clone the repository.
+2. Run the application (for more details, see `How_to_run.md`, open browser and navigate to local Gradio Server: [http://127.0.0.1:7860](http://127.0.0.1:7860), Ensure you have the required dependencies installed (requirements.txt)):
 ```bash
 python app.py
 
