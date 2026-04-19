@@ -51,10 +51,9 @@ M.A.G.E. utilizes a multi-model pipeline to process, enhance, and evaluate your 
 ## Deployment
 Ensure you have the required dependencies installed (PyTorch, Diffusers, Ultralytics, Transformers, Gradio). 
 
-1. Clone the repository.
-2. Run the application by following How_to_run.md
+2. Run the application (for more details, see `How_to_run.md`, open browser and navigate to local Gradio Server: [http://127.0.0.1:7860](http://127.0.0.1:7860)
+):
 ```bash
-python app.py  ```
-3. Open browser and navigate to local Gradio Server: [http://127.0.0.1:7860](http://127.0.0.1:7860)
+python app.py
 
 
