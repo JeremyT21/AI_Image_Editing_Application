@@ -9,6 +9,11 @@ Presentation Link: [To View Presentation Video CLICK HERE](https://youtu.be/VJn_
 | Jeremy Thummel | 100874310 |
 | Tyson Grant | 100875284
 
+Group ID's given to each member:
+
+Adam - Group ID 21
+Tyson - Group ID 22
+Jeremy - Group ID 23
 
 ## The Problem
 Traditional image editing requires the user to select regions of an image using a magic wand or lasso tool, then hand-craft layers or images to replace or distort these images. Traditional techniques do not have a grasp on what objects are, or what they are being replaced with.
