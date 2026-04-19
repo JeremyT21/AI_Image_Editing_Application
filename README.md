@@ -5,7 +5,7 @@ Presentation Link: [Presentation HERE](https://docs.google.com/presentation/d/1m
 
 | Name | Student Number |
 | ----------- | ----------- |
-| Adam Kolodziejczak | 100 ... |
+| Adam Kolodziejczak | 100874535 |
 | Jeremy Thummel | 100 ... |
 | Tyson Grant | 100875284
 
