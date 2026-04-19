@@ -1,4 +1,4 @@
-# G.R.I.D. - Generative Retargeting & Editing Robot
+# M.A.G.E - Masked And Generative Editor
 
 Presentation Link: [Presentation HERE](https://docs.google.com/presentation/d/1mV8537iCb7vSeOqNhG83GdzGO182wE9M3IOhMXgK8NA/edit?slide=id.g3d72a841141_3_51#slide=id.g3d72a841141_3_51) -- change to YouTube video when uploaded
 
