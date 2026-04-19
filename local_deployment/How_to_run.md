@@ -14,7 +14,7 @@ and finally, run:
 
 ```python app.py```
 
-## Using GPU (only works on some machines):
+## Using GPU:
 Create virtual environment called ```mlenv``` using Python 3.11 (necessary for version of Torch to work):
 
 ```py -3.11 -m venv mlenv```
