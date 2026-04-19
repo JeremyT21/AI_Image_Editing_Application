@@ -37,15 +37,15 @@ M.A.G.E. utilizes a multi-model pipeline to process, enhance, and evaluate your 
 
 Uploading Horse Image:
 
-<img src="./example_images/horse.jpg"/>
+<img src="./example_images/horse.jpg" style="width: 300px; height: auto;"/>
 
 Mask of Horse Extracted:
 
-<img src="./example_images/horse_mask.png"/>
+<img src="./example_images/horse_mask.png" style="width: 300px; height: auto;"/>
 
 M.A.G.E. Modified Image Output:
 
-<img src="./example_images/pig.png"/>
+<img src="./example_images/pig.png" style="width: 300px; height: auto;"/>
 
 ### Auto Masking Examples -
 ### Car Style Changes
