@@ -1,5 +1,5 @@
 # How To Run the app.py Locally
-[!NOTE] Must be in the local_deployment folder
+NOTE: Must be in the local_deployment folder
 
 ## Using CPU:
 Install PyTorch manually to specify version:
