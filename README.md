@@ -1,6 +1,8 @@
 # M.A.G.E - Masked And Generative Editor
 
-Video Presentation Link: [To View Presentation Video CLICK HERE](https://youtu.be/VJn_2BHbwCs)
+[![Click Here to View Presentation Video](https://img.youtube.com/vi/VJn_2BHbwCs/maxresdefault.jpg)](https://youtu.be/VJn_2BHbwCs)
+
+[To View Presentation Video Click Here](https://youtu.be/VJn_2BHbwCs)
 
 ## The Problem
 Traditional image editing requires the user to select regions of an image using a magic wand or lasso tool, then hand-craft layers or images to replace or distort these images. Traditional techniques do not have a grasp on what objects are, or what they are being replaced with.
