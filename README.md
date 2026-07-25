@@ -17,33 +17,22 @@ M.A.G.E. utilizes a multi-model pipeline to process, enhance, and evaluate your 
 
 ---
 
-## Image Examples
+## Image Generation Example 1
 
-### Auto Masking Example -
-### Replace Horse with Pig
+### Auto Masking Example - Replacing Horse with Pig
 
-Uploading Horse Image:
+| Uploaded Horse Image | Extracted Horse Mask | M.A.G.E. Output |
+|:---:|:---:|:---:|
+| <img src="./example_images/horse.jpg" width="250" alt="Original horse running on a beach"> | <img src="./example_images/horse_mask.png" width="250" alt="Binary mask extracted around the horse"> | <img src="./example_images/pig.png" width="250" alt="Horse replaced with a pig while preserving the background"> |
+| Original Image | YOLO Segmentation Mask | Generated Result |
 
-<img src="./example_images/horse.jpg" style="width: 300px; height: auto;"/>
+## Image Generation Example 2
 
-Mask of Horse Extracted:
-
-<img src="./example_images/horse_mask.png" style="width: 300px; height: auto;"/>
-
-M.A.G.E. Modified Image Output:
-
-<img src="./example_images/pig.png" style="width: 300px; height: auto;"/>
-
-### Auto Masking Examples -
 ### Car Style Changes
 
-Change Car to be Cartoon:
-
-<img src="./example_images/car_cartoon.png"/>
-
-Change Car to be a Pencil Sketch:
-
-<img src="./example_images/car_pencil.png"/>
+| Cartoon Style Transfrmation | Pencil Sketch Style Transformation |
+|:---:|:---:|
+| <img src="./example_images/car_cartoon.png" width="360" alt="Sports car transformed into a cartoon style"> | <img src="./example_images/car_pencil.png" width="360" alt="Sports car transformed into a pencil sketch style"> |
 
 ---
 
