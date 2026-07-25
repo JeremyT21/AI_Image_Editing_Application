@@ -1,19 +1,6 @@
 # M.A.G.E - Masked And Generative Editor
 
-Presentation Link: [To View Presentation Video CLICK HERE](https://youtu.be/VJn_2BHbwCs)
-
-
-| Name | Student Number |
-| ----------- | ----------- |
-| Adam Kolodziejczak | 100XXXXXX |
-| Jeremy Thummel | 100XXXXXX |
-| Tyson Grant | 100XXXXXX |
-
-Group ID's given to each member:
-
-Adam - Group ID 21
-Tyson - Group ID 22
-Jeremy - Group ID 23
+Video Presentation Link: [To View Presentation Video CLICK HERE](https://youtu.be/VJn_2BHbwCs)
 
 ## The Problem
 Traditional image editing requires the user to select regions of an image using a magic wand or lasso tool, then hand-craft layers or images to replace or distort these images. Traditional techniques do not have a grasp on what objects are, or what they are being replaced with.
@@ -85,8 +72,44 @@ Change Car to be a Pencil Sketch:
 
 ## Deployment
 1. Clone the repository.
-2. Run the application (for more details, see `How_to_run.md`, open browser and navigate to local Gradio Server: [http://127.0.0.1:7860](http://127.0.0.1:7860), Ensure you have the required dependencies installed (requirements.txt)):
+2. Run the application (for more details see the section below, open browser and navigate to local Gradio Server: [http://127.0.0.1:7860](http://127.0.0.1:7860), Ensure you have the required dependencies installed (requirements.txt)):
 ```bash
 python app.py
+```
 
+## How To Run the app.py Locally
+NOTE: Must be in the local_deployment folder
 
+## Using CPU:
+Install PyTorch manually to specify version:
+
+```pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121```
+
+then run:
+
+```pip install -r requirements.txt```
+
+and finally, run:
+
+```python app.py```
+
+## Using GPU:
+Create virtual environment called ```mlenv``` using Python 3.11 (necessary for version of Torch to work):
+
+```py -3.11 -m venv mlenv```
+
+then activate using:
+
+```mlenv\Scripts\activate```
+
+Next, install GPU version of Torch (CUDA 12.1, used for GPU acceleration):
+
+```pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121```
+
+Now install requirements.txt:
+
+```pip install -r requirements.txt```
+
+and finally, run:
+
+```python app.py```
